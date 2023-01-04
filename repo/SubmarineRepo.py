@@ -8,13 +8,19 @@ class SubmarineRepo():
         return self._data
 
     def getLen(self):
-        return len(self._data)
+        res = len(self._data)
+        return res
 
     def add(self, value):
         self._data.append(value)
 
     def removeAtPosition(self, position):
-        self._data = self._data[:position-1] + self._data[position:]
+        if len(self._data) == 1:
+            self._data = []
+        elif position == 0:
+            self._data = [self._data[1]]
+        elif position == 1:
+            self._data = [self._data[0]]
 
     def __str__(self):
         return str(self._data)

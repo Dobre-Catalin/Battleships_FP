@@ -40,7 +40,17 @@ class AI():
         :return:
         """
         bias = random.randint(1, 10)
-        if bias <= 7:
+        if len(self._innerShot) <= 15 and bias > 7:
+            X = random.randint(3, 6)
+            Y = random.randint(3, 6)
+            while [X, Y] in self._allShots:
+                X = random.randint(3, 6)
+                Y = random.randint(3, 6)
+            self._innerShot.append([X,Y])
+            self.addAllShots([X, Y])
+            print([X, Y])
+            return [X, Y]
+        else:
             X = random.randint(0, 9)
             Y = random.randint(0, 9)
             while [X, Y] in self._allShots:
@@ -50,25 +60,38 @@ class AI():
             if X >= 3 and X <= 6:
                 if Y >= 3 and Y <= 6:
                     self._innerShot.append([X, Y])
+            print([X,Y])
             return [X, Y]
-        elif len(self._innerShot) <= 16:
-            X = random.randint(3, 6)
-            Y = random.randint(3, 6)
-            while [X, Y] in self._allShots:
-                X = random.randint(3, 6)
-                Y = random.randint(3, 6)
-            self._innerShot.append([X,Y])
-            self.addAllShots([X, Y])
-            return [X, Y]
+
+    def checkShot(self, X, Y):
+        if X > 9 or Y > 9:
+            return False
+        if X < 0 or Y < 0:
+            return False
+        if [X,Y] in self._allShots:
+            return False
+        return True
 
     def attackPhase(self):
         if self._lastResult == 'hit':
             if self._shipShot == []:
-                self._shipShot.append(self._allShots[-1])
-        nextShot = self._shipShot[-1]
+                #self._shipShot.append(self._allShots[-1])
+                nextShot = copy.deepcopy(self._allShots[-1])
+            else:
+                nextShot = copy.deepcopy(self._shipShot[-1])
+        nextShot[0] = int(nextShot[0])
+        nextShot[1] = int(nextShot[1])
         sequnece = [0, 1, -1]
-        nextShot[0] = nextShot[0] + random.choice(sequnece)
-        nextShot[1] = nextShot[1] + random.choice(sequnece)
+        pas = False
+        tries = 0
+        while pas == False and tries != 10:
+            nextShot[0] = nextShot[0] + random.choice(sequnece)
+            nextShot[1] = nextShot[1] + random.choice(sequnece)
+            pas = self.checkShot(nextShot[0], nextShot[1])
+            tries += 1
+        if tries == 10:
+            self.resetShipShot()
+            return self.scoutPhase()
         return nextShot
 
     def notInFleet(self, current, fleet):
@@ -189,23 +212,33 @@ class AI():
 
     def doMove(self):
         if self._lastResult == 'start' or (self._lastResult == 'miss' and self._shipShot == []):
-            return self.scoutPhase()
+            result = self.scoutPhase()
+            self.addAllShots(result)
+            return result
 
         if self._lastResult == 'sink':
             #checks if it sank a submarine with a random shot
             if self._shipShot == []:
-                return self.scoutPhase()
+                result = self.scoutPhase()
+                self.addAllShots(result)
+                return result
 
             elif self._shipShot != []:
                 self.resetShipShot()
-                return self.scoutPhase()
+                result = self.scoutPhase()
+                self.addAllShots(result)
+                return result
 
         if self._lastResult == 'hit':
             result = self.attackPhase()
-            self.addShipShot(result)
+            self.addAllShots(result)
+            self.addShipShot(self._allShots[-1])
             return result
 
         if self._lastResult == 'miss' and self._shipShot != []:
-            pass
+            self.resetShipShot()
+            result = self.scoutPhase()
+            self.addAllShots(result)
+            return result
 
 

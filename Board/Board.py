@@ -32,26 +32,30 @@ class StrategyBoard():
 
     def addShip(self, value, type):
         if self.checkIfPlaceable(value, type):
-            if value[0] == value[2]:
-                up = min(value[3], value[1])
-                down = max(value[3], value[1])
-                for position in range(up, down+1):
-                    self._gameBoard[value[0]][position] = 1
-            else:
-                left = min(value[2], value[0])
-                right = max(value[0], value[2])
-                for position in range(left, right + 1):
-                    self._gameBoard[position][value[3]] = 1
+        #     if value[0] == value[2]:
+        #         up = min(value[3], value[1])
+        #         down = max(value[3], value[1])
+        #         for position in range(up, down+1):
+        #             self._gameBoard[value[0]][position] = 1
+        #     else:
+        #         left = min(value[2], value[0])
+        #         right = max(value[0], value[2])
+        #         for position in range(left, right + 1):
+        #             self._gameBoard[position][value[3]] = 1
+            coord = value.getOccupiedCoordonates()
+            for co in coord:
+                self._gameBoard[co[0]][co[1]] = 1
+
             if type == 'carrier':
-                self._repo.addCarrier(Carrier(value[0], value[1], value[2], value[3]))
+                self._repo.addCarrier(value)
             if type == 'battleship':
-                self._repo.addBattleship(Battleship(value[0], value[1], value[2], value[3]))
+                self._repo.addBattleship(value)
             if type == 'cruiser':
-                self._repo.addCruiser(Cruiser(value[0], value[1], value[2], value[3]))
+                self._repo.addCruiser(value)
             if type == 'destroyer':
-                self._repo.addDestroyer(Destroyer(value[0], value[1], value[2], value[3]))
+                self._repo.addDestroyer(value)
             if type == 'submarine':
-                self._repo.addSubmarine(Submarine(value[0], value[1], value[2], value[3]))
+                self._repo.addSubmarine(value)
             self._ships += 1
         else:
             return 'unplaceable'
@@ -105,7 +109,7 @@ class HitMatrix():
         if result == 'hit' or result == 'sink':
             res = 1
             self._historyBoard[X][Y] = res
-        if result == 'miss':
+        elif result == 'miss':
             res = -1
             self._historyBoard[X][Y] = res
 

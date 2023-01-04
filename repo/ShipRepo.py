@@ -22,7 +22,8 @@ class ShipRepo():
         self._cruiser = CruiserRepo()
 
     def getFleetSize(self):
-        return self._battles.getLen() + self._subs.getLen() + self._destroy.getLen() + self._carry.getLen() + self._cruiser.getLen()
+        res = self._battles.getLen() + self._subs.getLen() + self._destroy.getLen() + self._carry.getLen() + self._cruiser.getLen()
+        return res
 
     def addCruiser(self, value):
         self._cruiser.add(value)
@@ -61,7 +62,7 @@ class ShipRepo():
                             result = ship.gotHit()
                             found = True
                             if result == -1:
-                                self._carry.removeAtPosition(i)
+                                self._battles.removeAtPosition(i)
                                 print("bat destroyed")
                                 return 'sink'
                             break
@@ -97,7 +98,7 @@ class ShipRepo():
                             result = ship.gotHit()
                             found = True
                             if result == -1:
-                                self._carry.removeAtPosition(i)
+                                self._cruiser.removeAtPosition(i)
                                 print("cruiser destroyed")
                                 return sectorOcupied
                             break
@@ -115,7 +116,7 @@ class ShipRepo():
                             result = ship.gotHit()
                             found = True
                             if result == -1:
-                                self._carry.removeAtPosition(i)
+                                self._destroy.removeAtPosition(i)
                                 print("destroyer destroyed")
                                 return sectorOcupied
                             break
@@ -133,7 +134,7 @@ class ShipRepo():
                             result = ship.gotHit()
                             found = True
                             if result == -1:
-                                self._carry.removeAtPosition(i)
+                                self._subs.removeAtPosition(i)
                                 print("sub destroyed")
                                 return sectorOcupied
                             break

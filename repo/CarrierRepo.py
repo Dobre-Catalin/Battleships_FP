@@ -5,7 +5,8 @@ class CarrierRepo():
         self._data = []
 
     def getLen(self):
-        return len(self._data)
+        res = len(self._data)
+        return res
 
     def getList(self):
         return self._data
@@ -14,6 +15,9 @@ class CarrierRepo():
         self._data.append(value)
 
     def removeAtPosition(self, position):
+        if(len(self._data) == 1):
+            self._data = []
+            return
         self._data = self._data[:position-1] + self._data[position:]
 
     def __str__(self):

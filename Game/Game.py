@@ -1,6 +1,11 @@
 from Board.Board import StrategyBoard
 from Board.Board import HitMatrix
 from AI.AI import AI
+from Ships.Carrier import Carrier
+from Ships.Cruiser import Cruiser
+from Ships.Battleship import Battleship
+from Ships.Submarine import Submarine
+from Ships.Destroyer import Destroyer
 
 class Game():
     def __init__(self):
@@ -15,23 +20,32 @@ class Game():
         self._enemy = AI()
 
     def addPlayerShips(self, playerShip):
-        self._player["shipBoard"].addShip(playerShip[0], playerShip[1])
+        if playerShip[1] =='carrier':
+            self._player["shipBoard"].addShip(Carrier(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
+        if playerShip[1] =='battleship':
+            self._player["shipBoard"].addShip(Battleship(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
+        if playerShip[1] =='cruiser':
+            self._player["shipBoard"].addShip(Cruiser(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
+        if playerShip[1] =='destroyer':
+            self._player["shipBoard"].addShip(Destroyer(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
+        if playerShip[1] =='submarine':
+            self._player["shipBoard"].addShip(Submarine(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
 
     def addComputerShips(self, computerShip):
-        list = [computerShip[0]._startRow, computerShip[0]._startCol,computerShip[0]._endRow,computerShip[0]._endCol]
-        self._computer["shipBoard"].addShip(list, 'carrier')
-        list = [computerShip[1]._startRow, computerShip[1]._startCol, computerShip[1]._endRow, computerShip[1]._endCol]
-        self._computer["shipBoard"].addShip(list, 'battleship')
-        list = [computerShip[2]._startRow, computerShip[2]._startCol, computerShip[2]._endRow, computerShip[2]._endCol]
-        self._computer["shipBoard"].addShip(list, 'cruiser')
-        list = [computerShip[3]._startRow, computerShip[3]._startCol, computerShip[3]._endRow, computerShip[3]._endCol]
-        self._computer["shipBoard"].addShip(list, 'destroyer')
-        list = [computerShip[4]._startRow, computerShip[4]._startCol, computerShip[4]._endRow, computerShip[4]._endCol]
-        self._computer["shipBoard"].addShip(list, 'destroyer')
-        list = [computerShip[5]._startRow, computerShip[5]._startCol, computerShip[5]._endRow, computerShip[5]._endCol]
-        self._computer["shipBoard"].addShip(list, 'submarine')
-        list = [computerShip[6]._startRow, computerShip[6]._startCol, computerShip[6]._endRow, computerShip[6]._endCol]
-        self._computer["shipBoard"].addShip(list, 'submarine')
+        #list = [computerShip[0]._startRow, computerShip[0]._startCol,computerShip[0]._endRow,computerShip[0]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[0], 'carrier')
+        #list = [computerShip[1]._startRow, computerShip[1]._startCol, computerShip[1]._endRow, computerShip[1]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[1], 'battleship')
+        #list = [computerShip[2]._startRow, computerShip[2]._startCol, computerShip[2]._endRow, computerShip[2]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[2], 'cruiser')
+        #list = [computerShip[3]._startRow, computerShip[3]._startCol, computerShip[3]._endRow, computerShip[3]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[3], 'destroyer')
+        #list = [computerShip[4]._startRow, computerShip[4]._startCol, computerShip[4]._endRow, computerShip[4]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[4], 'destroyer')
+        #list = [computerShip[5]._startRow, computerShip[5]._startCol, computerShip[5]._endRow, computerShip[5]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[5], 'submarine')
+        #list = [computerShip[6]._startRow, computerShip[6]._startCol, computerShip[6]._endRow, computerShip[6]._endCol]
+        self._computer["shipBoard"].addShip(computerShip[6], 'submarine')
 
     def startGame(self, playerShips):
         for ship in playerShips:
@@ -44,7 +58,7 @@ class Game():
         Y = int(Y)
         result = self._computer["shipBoard"].checkIfHit(X, Y)
         if result == 'sink':
-            self._player["hitBoard"].noteShot(X, Y, 'hit')
+            self._player["hitBoard"].noteShot(X, Y, 'sink')
             if self._computer["shipBoard"]._repo.getFleetSize() == 0:
                 return 1
         elif result == 'miss':
@@ -56,7 +70,7 @@ class Game():
         result = self._player["shipBoard"].checkIfHit(toHit[0], toHit[1])
         if result == 'sink':
             self._computer["hitBoard"].noteShot(X, Y, 'hit')
-            if self._player["shipBoard"].getFleetSize() == 0:
+            if self._player["shipBoard"]._repo.getFleetSize() == 0:
                 self._enemy.setLastResult(result)
                 return -1
         elif result == 'hit':
@@ -72,5 +86,3 @@ class Game():
         boards.append(self._player["shipBoard"].getBoard())
         boards.append(self._player["hitBoard"].getBoard())
         return boards
-
-

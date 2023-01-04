@@ -28,10 +28,10 @@ class Carrier:
                 ocupiedSectors.append([position, self._startCol])
         # horizontal
         else:
-            up = min(self._startRow, self._startCol)
-            down = max(self._startRow, self._startCol+1)
-            for position in range(up, down):
-                ocupiedSectors.append([self._endRow,position])
+            up = min(self._endCol, self._startCol)
+            down = max(self._endCol, self._startCol)
+            for position in range(up, down + 1):
+                ocupiedSectors.append([self._endRow, position])
         return ocupiedSectors
 
     def getType(self):

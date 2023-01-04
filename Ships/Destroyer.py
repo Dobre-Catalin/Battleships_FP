@@ -21,9 +21,10 @@ class Destroyer():
             for position in range(left, right + 1):
                 ocupiedSectors.append([position, self._startCol])
         # horizontal
+        #self._startRow == self._endRow
         else:
-            up = min(self._startRow, self._startCol)
-            down = max(self._startRow, self._startCol)
+            up = min(self._endCol, self._startCol)
+            down = max(self._endCol, self._startCol)
             for position in range(up, down+1):
                 ocupiedSectors.append([self._endRow, position])
         return ocupiedSectors
