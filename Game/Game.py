@@ -20,6 +20,11 @@ class Game():
         self._enemy = AI()
 
     def addPlayerShips(self, playerShip):
+        """
+        since we know the way the UI asks for ships, they can be added just by using their order in the list
+        :param playerShip:
+        :return:
+        """
         if playerShip[1] =='carrier':
             self._player["shipBoard"].addShip(Carrier(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
         if playerShip[1] =='battleship':
@@ -32,6 +37,12 @@ class Game():
             self._player["shipBoard"].addShip(Submarine(playerShip[0][0], playerShip[0][1], playerShip[0][2], playerShip[0][3]), playerShip[1])
 
     def addComputerShips(self, computerShip):
+        """
+        since the ships come in a certain order, from the way the AI is structured, we know what each time will be from
+        their position in the list
+        :param computerShip:
+        :return:
+        """
         #list = [computerShip[0]._startRow, computerShip[0]._startCol,computerShip[0]._endRow,computerShip[0]._endCol]
         self._computer["shipBoard"].addShip(computerShip[0], 'carrier')
         #list = [computerShip[1]._startRow, computerShip[1]._startCol, computerShip[1]._endRow, computerShip[1]._endCol]
@@ -48,12 +59,27 @@ class Game():
         self._computer["shipBoard"].addShip(computerShip[6], 'submarine')
 
     def startGame(self, playerShips):
+        """
+        initiates the game using the list given from the UI layer
+        :param playerShips: list of ships and types
+        :return: nothing, get the game going
+        """
         for ship in playerShips:
             self.addPlayerShips(ship)
         computerShip = self._enemy.generateShips()
         self.addComputerShips(computerShip)
 
     def placeHits(self, X, Y):
+        """
+        receives the coordonates of the hit
+        sends it to the Game layer where it is vertified if there was a hit and the extent of the damages
+        if the hit causes a sink, the function asks for the remaining fleet size to see if there are any left
+        and stops the game if so
+        asks the ai to generate hits to do the same process for the ai
+        :param X: int
+        :param Y: int
+        :return: 1 for player win, -1 for computer win, 0 for continue game
+        """
         X = int(X)
         Y = int(Y)
         result = self._computer["shipBoard"].checkIfHit(X, Y)
@@ -82,6 +108,11 @@ class Game():
         return 0
 
     def getBoardsPlayer(self):
+        """
+        gets the current status of the player
+        in form of the two matrixes explained in Board layers
+        :return:
+        """
         boards = []
         boards.append(self._player["shipBoard"].getBoard())
         boards.append(self._player["hitBoard"].getBoard())

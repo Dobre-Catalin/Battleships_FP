@@ -29,9 +29,6 @@ class AI():
     def resetShipShot(self):
         self._shipShot = []
 
-    def selectPhase(self):
-        pass
-
     def scoutPhase(self):
         """
         function shots random shots either anywgere in the arena, or using the bias variable
